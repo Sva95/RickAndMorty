@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        applicationId "com.example.testapi"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation androidx.core_ktx
+    implementation androidx.app_compat
+    implementation androidx.material
+    implementation androidx.constraintlayout
+
+    implementation activity.activity_ktx
+    implementation activity.fragment_ktx
+
+    implementation lifecycle.extensions
+    implementation lifecycle.viewmodel
+    implementation lifecycle.livedata
+    implementation lifecycle.runtime
+
+    implementation glide.core
+    annotationProcessor glide.compile
+
+    implementation rxjava2.rxjava2
+    implementation rxandroid.rxandroid
+
+    implementation koin.core
+    implementation koin.android
+    implementation koin.viewmodel
+    implementation koin.scope
+
+    implementation retrofit2.retrofit
+    implementation retrofit2.adapter
+    implementation retrofit2.converter_gson
+    implementation okhttp3.logging_interceptor
+}
