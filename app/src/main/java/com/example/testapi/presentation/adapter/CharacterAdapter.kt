@@ -3,6 +3,7 @@ package com.example.testapi.presentation.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import com.example.testapi.R
@@ -50,7 +51,6 @@ class CharacterAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder<CharacterEntity>, position: Int) {
         when (getItemViewType(position)) {
-
             R.layout.item_error_paging -> if (holder is ErrorPagingViewHolder) {
                 holder.bind(characterList[position], onRetry)
             }

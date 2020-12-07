@@ -102,7 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="30dp"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
 
     <androidx.recyclerview.widget.RecyclerView

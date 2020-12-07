@@ -90,7 +90,6 @@ class CharacterViewModel(
                 )
     }
 
-
     private fun handleSuccess(list: List<CharacterEntity>) {
         page = page + 1
         _characterState.value = CharacterState.Success

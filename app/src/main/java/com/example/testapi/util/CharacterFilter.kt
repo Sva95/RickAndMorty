@@ -2,19 +2,17 @@ package com.example.testapi.util
 
 data class CharacterFilter(
     var name: String = "",
-    var filterNamePosition: Int? = 0,
+    var filterNamePosition: Int = 0,
     var status: String = "",
-    var filterStatusPosition: Int? = 0,
+    var filterStatusPosition: Int = 0,
     var species: String = "",
-    var filterSpeciesPosition: Int? = 0
+    var filterSpeciesPosition: Int = 0
 )
-
 
 class CharacterFilterCapsule {
 
     private val _userFilter = CharacterFilter()
     fun getFilter() = _userFilter
-
 
     fun updateFilterName(name: String) {
         _userFilter.name = name

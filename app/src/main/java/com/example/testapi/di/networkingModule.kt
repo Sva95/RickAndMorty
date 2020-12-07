@@ -1,4 +1,3 @@
-
 package com.example.testapi.di
 
 
@@ -16,8 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val networkModule = module {
     single { okhttpClient() }
-    single { retrofit(get()) }
-    single { apiService(get()) }
+    single { retrofit(okHttpClient = get()) }
+    single { apiService(retrofit = get()) }
 }
 
 fun apiService(
