@@ -15,7 +15,7 @@ class RickAndMortyRepositoryImpl(private val api: RickMortyApi) : RickAndMortyRe
     override fun getCharacters(
         page: Int,
         characterFilter: CharacterFilter
-    ): Single<CharacterResponse> {
+    ): Flow<CharacterResponse> {
         return api.getFilterUserNew(
             page = page,
             name = characterFilter.name,

@@ -13,7 +13,7 @@ interface RickAndMortyRepository {
     fun getCharacters(
         page: Int,
         characterFilter: CharacterFilter
-    ): Single<CharacterResponse>
+    ): Flow<CharacterResponse>
 
     fun getCharacterProfile(userId: Int): Flow<CharacterEntity>
 

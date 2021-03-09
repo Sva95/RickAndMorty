@@ -62,8 +62,8 @@ dependencies {
     implementation glide.core
     annotationProcessor glide.compile
 
-    implementation rxjava2.rxjava2
-    implementation rxandroid.rxandroid
+/*    implementation rxjava2.rxjava2
+    implementation rxandroid.rxandroid*/
 
     implementation koin.core
     implementation koin.android

@@ -36,7 +36,7 @@ fun retrofit(
     Retrofit.Builder()
         .baseUrl(Constant.RICK_AND_MORTY_URL_API)
         .client(okHttpClient)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+       // .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

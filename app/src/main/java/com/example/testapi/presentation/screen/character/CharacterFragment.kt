@@ -86,10 +86,10 @@ class CharacterFragment : Fragment(R.layout.activity_character) {
     }
 
     private fun configureObservables() {
-        viewModel.character.observe(viewLifecycleOwner, {
+/*        viewModel.character.observe(viewLifecycleOwner, {
             isLoading = false
             characterAdapter.setData(it)
-        })
+        })*/
 
         viewModel.networkState.observe(viewLifecycleOwner, {
             println("OOOOOOBSERVE")

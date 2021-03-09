@@ -18,11 +18,11 @@ interface RickMortyApi {
         @Query("name") name: String?,
         @Query("species") species: String?,
         @Query("status") status: String?
-    ): Single<CharacterResponse>
+    ): Flow<CharacterResponse>
 
 
     @GET("character/{id}")
-    fun getCharacterProfileById(
+     fun getCharacterProfileById(
         @Path("id") id: Int
     ): Flow<CharacterEntity>
 
