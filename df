@@ -1,0 +1,30 @@
+[33mcommit dfc06e9b2c0b0194a301e067f8d5df715f4709ca[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;32madd_navigation[m[33m)[m
+Author: Vadim Simonov <simonov.vadim95@gmail.com>
+Date:   Tue Mar 9 20:07:08 2021 +0100
+
+    add navigation
+
+[33mcommit 12c497e27f232c97364b4761988adaa02e18d887[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 2e127e5 dd48196
+Author: Vadim Simonov <simonov.vadim95@gmail.com>
+Date:   Mon Dec 7 18:47:07 2020 +0100
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 2e127e5b496c14f458da415276957991a721d84b[m
+Author: Vadim Simonov <simonov.vadim95@gmail.com>
+Date:   Mon Dec 7 18:42:09 2020 +0100
+
+    removed leaks from filter dialogs
+
+[33mcommit dd48196718a1fb92f8501c00722b567a5b49a810[m
+Author: Sva95 <52375528+Sva95@users.noreply.github.com>
+Date:   Tue Dec 1 02:24:18 2020 +0100
+
+    Create README.md
+
+[33mcommit e574e930a5377b3b7f9883df9ac4c5799d7fcfd9[m
+Author: Vadim Simonov <simonov.vadim95@gmail.com>
+Date:   Tue Dec 1 02:16:46 2020 +0100
+
+    init
