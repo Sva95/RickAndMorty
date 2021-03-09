@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/characterFragment">
+
+    <fragment
+
+        android:id="@+id/characterFragment"
+        android:name="com.example.testapi.presentation.screen.character.CharacterFragment"
+        android:label="CharacterFragment">
+
+        <action
+            android:id="@+id/action_characterFragment_to_characterProfileFragment"
+            app:destination="@id/characterProfileFragment"
+            app:popUpToInclusive="true" />
+
+
+    </fragment>
+    <dialog
+        android:id="@+id/filterSpeciesDialog"
+        android:name="com.example.testapi.presentation.screen.character.FilterSpeciesDialog"
+        android:label="FilterSpeciesDialog" />
+    <dialog
+        android:id="@+id/filterStatusDialog"
+        android:name="com.example.testapi.presentation.screen.character.FilterStatusDialog"
+        android:label="FilterStatusDialog" />
+    <fragment
+        android:id="@+id/characterProfileFragment"
+        android:name="com.example.testapi.presentation.screen.character_profile.CharacterProfileFragment"
+        android:label="CharacterProfileFragment">
+
+        <argument
+            android:name="character_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+</navigation>

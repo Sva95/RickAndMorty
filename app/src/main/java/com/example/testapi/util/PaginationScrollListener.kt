@@ -2,9 +2,10 @@ package com.example.testapi.util
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.testapi.presentation.adapter.WrapContentLinearLayoutManager
 
 
-abstract class PaginationScrollListener(private var layoutManager: LinearLayoutManager) :
+abstract class PaginationScrollListener(private var layoutManager: WrapContentLinearLayoutManager) :
     RecyclerView.OnScrollListener() {
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

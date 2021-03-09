@@ -9,6 +9,7 @@
     <string name="select_filter_status">Select status filter</string>
     <string name="select_filter_species">Select species filter</string>
     <string name="no_internet_connection">No Internet Connection</string>
+    <string name="character_profile">Profile</string>
 
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
@@ -34,11 +35,6 @@
         <item>@string/dead</item>
         <item>@string/unknown</item>
     </string-array>
-
-
-
-
-
 
 
 </resources>

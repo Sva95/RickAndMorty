@@ -1,4 +1,4 @@
-package com.example.testapi.presentation.screen.main
+package com.example.testapi.presentation.screen.character
 
 import androidx.lifecycle.*
 import com.example.testapi.data.remote.model.CharacterResponse
@@ -39,6 +39,7 @@ class CharacterViewModel(
         get() = _characterState
 
     init {
+        println("INNIT VIEWMODEL")
         _filterState.value = filter.getFilter()
         onLoadUpdateFilter()
     }

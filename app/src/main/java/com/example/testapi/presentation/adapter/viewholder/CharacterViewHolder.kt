@@ -1,11 +1,13 @@
 package com.example.testapi.presentation.adapter.viewholder
 
 import android.view.View
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.example.testapi.base.BaseViewHolder
 import com.example.testapi.presentation.entity.CharacterEntity
+import com.example.testapi.presentation.screen.character.CharacterFragmentDirections
 import kotlinx.android.synthetic.main.item_character.view.*
 
 class CharacterViewHolder(private val view: View) : BaseViewHolder<CharacterEntity>(view) {
@@ -15,6 +17,12 @@ class CharacterViewHolder(private val view: View) : BaseViewHolder<CharacterEnti
         view.txt_character_status.text = item.status
         view.txt_character_species.text = item.species
         view.txt_character_planet.text = item.location
+
+        view.img_character.setOnClickListener {
+            val userId = item.id
+            val action = CharacterFragmentDirections.actionCharacterFragmentToCharacterProfileFragment(userId)
+            it.findNavController().navigate(action)
+        }
 
         Glide.with(view.context)
             .load(item.img_url)

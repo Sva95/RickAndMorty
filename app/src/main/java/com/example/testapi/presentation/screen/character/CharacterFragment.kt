@@ -1,8 +1,11 @@
-package com.example.testapi.presentation.screen.main
+package com.example.testapi.presentation.screen.character
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.testapi.R
 import com.example.testapi.presentation.adapter.CharacterAdapter
 import com.example.testapi.presentation.adapter.WrapContentLinearLayoutManager
@@ -10,14 +13,15 @@ import com.example.testapi.presentation.entity.CharacterEntity
 import com.example.testapi.util.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 
-class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
+class CharacterFragment : Fragment(R.layout.activity_character) {
 
     private val viewModel: CharacterViewModel by viewModel()
-    private val linearLayoutManager = WrapContentLinearLayoutManager(this)
+    private var linearLayoutManager : WrapContentLinearLayoutManager? = WrapContentLinearLayoutManager(context)
     private lateinit var characterAdapter: CharacterAdapter
     private var isLoading = false
 
@@ -25,22 +29,39 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
         viewModel.setFilterName(it)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        bindView()
-        configureObservables()
-    }
 
-    private fun bindView() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
         characterAdapter = CharacterAdapter()
         characterAdapter.onRetry = {
             viewModel.onLoadMore()
             characterAdapter.removeErrorHolder()
         }
 
-        rv_characters.apply {
-            setLayoutManager(linearLayoutManager)
-            addOnScrollListener(paginationScrollListener)
+        return inflater.inflate(R.layout.activity_character, container, false);
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        bindView()
+        configureObservables()
+    }
+
+    private fun bindView() {
+
+        with(rv_characters) {
+            if (linearLayoutManager != null) {
+                linearLayoutManager = null
+                linearLayoutManager = WrapContentLinearLayoutManager(context)
+                setLayoutManager(linearLayoutManager)
+                addOnScrollListener(paginationScrollListener)
+            }
+
+
             adapter = characterAdapter
             itemAnimator = null
         }
@@ -65,12 +86,13 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
     }
 
     private fun configureObservables() {
-        viewModel.character.observe(this, {
+        viewModel.character.observe(viewLifecycleOwner, {
             isLoading = false
             characterAdapter.setData(it)
         })
 
-        viewModel.networkState.observe(this, {
+        viewModel.networkState.observe(viewLifecycleOwner, {
+            println("OOOOOOBSERVE")
             when (it) {
                 is CharacterState.NetworkError -> {
                     layout_error.visibility = View.VISIBLE
@@ -78,7 +100,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
                     rv_characters.visibility = View.INVISIBLE
                 }
                 is CharacterState.Success -> {
-                    rv_characters.addOnScrollListener(paginationScrollListener)
+                    // rv_characters.addOnScrollListener(paginationScrollListener)
                     pb_load_content.visibility = View.GONE
                     layout_error.visibility = View.GONE
                     rv_characters.visibility = View.VISIBLE
@@ -86,7 +108,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
                 is CharacterState.NetworkPagingError -> {
                     pb_load_content.visibility = View.GONE
                     layout_error.visibility = View.GONE
-                    rv_characters.removeOnScrollListener(paginationScrollListener)
+                    //  rv_characters.removeOnScrollListener(paginationScrollListener)
                     characterAdapter.addPagingErrorItem(CharacterEntity(id = Constant.ERROR_TYPE_VIEW_HOLDER))
                     rv_characters.scrollToPosition(characterAdapter.getItemCount() - 1);
                 }
@@ -110,23 +132,23 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
     }
 
     private fun showFilterStatusDialog() {
-        val dialog = FilterStatusDialog.newInstance()
-        dialog.show(supportFragmentManager, null)
+        findNavController().navigate(R.id.filterStatusDialog)
     }
 
     private fun showFilterSpeciesDialog() {
-        val dialog = FilterSpeciesDialog.newInstance()
-        dialog.show(supportFragmentManager, null)
+        findNavController().navigate(R.id.filterSpeciesDialog)
     }
 
-    private val paginationScrollListener = object : PaginationScrollListener(linearLayoutManager) {
-        override fun loadMoreItems() {
-            if (!isLoading) {
-                isLoading = true
-                viewModel.onLoadMore()
+    private val paginationScrollListener =
+        object : PaginationScrollListener(linearLayoutManager!!) {
+            override fun loadMoreItems() {
+                if (!isLoading) {
+                    isLoading = true
+                    viewModel.onLoadMore()
+                }
             }
         }
-    }
+
 }
 
 

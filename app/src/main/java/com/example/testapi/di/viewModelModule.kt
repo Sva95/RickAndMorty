@@ -2,7 +2,7 @@ package com.example.testapi.di
 
 
 import com.example.testapi.presentation.mapper.CharacterMapper
-import com.example.testapi.presentation.screen.main.CharacterViewModel
+import com.example.testapi.presentation.screen.character.CharacterViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
