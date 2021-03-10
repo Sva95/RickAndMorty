@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -62,9 +63,6 @@ dependencies {
     implementation glide.core
     annotationProcessor glide.compile
 
-/*    implementation rxjava2.rxjava2
-    implementation rxandroid.rxandroid*/
-
     implementation koin.core
     implementation koin.android
     implementation koin.viewmodel
@@ -75,12 +73,10 @@ dependencies {
     implementation retrofit2.converter_gson
     implementation okhttp3.logging_interceptor
 
-    def nav_version = "2.3.2"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    implementation navigation.fragment_ktx
+    implementation navigation.ui_ktx
+    implementation navigation.dynamic_features_fragment
 
-
-
-
+    implementation paging.paging_runtime
+    
 }

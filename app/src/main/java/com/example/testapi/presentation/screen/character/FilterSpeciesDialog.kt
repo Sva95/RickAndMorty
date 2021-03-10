@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navGraphViewModels
 import com.example.testapi.R
 import com.example.testapi.util.CharacterFilter
 import kotlinx.android.synthetic.main.dialog_filter_species.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import org.koin.androidx.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class FilterSpeciesDialog : DialogFragment() {
@@ -28,11 +34,12 @@ class FilterSpeciesDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        characterViewModel.observeFilterState.observe(viewLifecycleOwner, { characterFilter ->
-            (radioGroup.getChildAt(characterFilter.filterSpeciesPosition) as RadioButton).isChecked =
-                true
-        })
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            characterViewModel.requestChannel.collect { characterFilter ->
+                (radioGroup.getChildAt(characterFilter.filterSpeciesPosition) as RadioButton).isChecked =
+                    true
+            }
+        }
 
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radioChecked: View = group.findViewById(checkedId)

@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">TestApi</string>
-    <string name="no_more_items">No more items</string>
-    <string name="retry_paging">retry</string>
     <string name="character_status">Status</string>
     <string name="character_species">Species</string>
     <string name="character_location">Location</string>

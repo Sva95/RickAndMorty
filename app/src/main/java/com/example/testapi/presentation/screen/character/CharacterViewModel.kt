@@ -1,112 +1,82 @@
 package com.example.testapi.presentation.screen.character
 
 import androidx.lifecycle.*
-import com.example.testapi.data.remote.model.CharacterResponse
+import androidx.paging.*
+import com.example.testapi.data.RickMortyApi
+import com.example.testapi.data.remote.CharacterPagingSource
+import com.example.testapi.data.remote.model.CharacterEntity
 import com.example.testapi.domain.repository.RickAndMortyRepository
-import com.example.testapi.presentation.entity.CharacterEntity
+import com.example.testapi.presentation.entity.CharacterUiEntity
 import com.example.testapi.presentation.mapper.Mapper
 import com.example.testapi.util.*
 
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class CharacterViewModel(
-    private val characterEntityMapper: Mapper<CharacterResponse, List<CharacterEntity>>,
-    private val rickAndMortyRepository: RickAndMortyRepository
+    private val characterEntityMapper: Mapper<CharacterEntity, CharacterUiEntity>,
+    private val rickAndMortyRepository: RickAndMortyRepository,
+    private val movieRickMortyApi: RickMortyApi
 ) : ViewModel() {
 
-    private var page = 1
+    private var _dataPagingSource: CharacterPagingSource? = null
     private val filter = CharacterFilterCapsule()
+    private val _requestChannel = ConflatedBroadcastChannel(filter.getFilter())
 
-/*    private val _characterCache = CacheLiveData()
-    val character: LiveData<List<CharacterEntity>>
-        get() = _characterCache*/
+    val requestChannel: Flow<CharacterFilter> = _requestChannel.asFlow()
 
-    private val _uiState =
-        MutableStateFlow<CharacterProfileUiState>(CharacterProfileUiState.Loading)
-    val uiState: StateFlow<CharacterProfileUiState> = _uiState
+    private val charactersConfig = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            prefetchDistance = 2
+        ),
+        pagingSourceFactory = {
+            CharacterPagingSource(
+                movieApiService = movieRickMortyApi,
+                characterFilter = filter
+            ).also {
+                _dataPagingSource = it
+            }
+        }
+    ).flow
+        .map { it.map { characterEntityMapper.mapToEntity(it) } }
+        .cachedIn(viewModelScope)
 
-
-    private val _filterState = MutableLiveData<CharacterFilter>()
-    val observeFilterState: LiveData<CharacterFilter>
-        get() = _filterState
-
-    private val _characterState = MutableLiveData<CharacterState>()
-    val networkState: LiveData<CharacterState>
-        get() = _characterState
+    val characters: Flow<PagingData<CharacterUiEntity>>
+        get() = charactersConfig
 
     init {
-        _filterState.value = filter.getFilter()
-        onLoadUpdateFilter()
+        _requestChannel
+            .asFlow()
+            .debounce { 400 }
+            .onEach { _dataPagingSource?.invalidate() }
+            .launchIn(viewModelScope)
     }
 
     fun setFilterName(userName: String) {
         if (userName == filter.getFilter().name) return
         filter.updateFilterName(userName)
-        onLoadUpdateFilter()
+        updateFilter()
     }
 
     fun setFilterStatus(characterFilter: CharacterFilter) {
         filter.updateFilterStatus(characterFilter)
-        onLoadUpdateFilter()
+        updateFilter()
     }
 
     fun setFilterSpecies(characterFilter: CharacterFilter) {
         filter.updateFilterSpecies(characterFilter)
-        onLoadUpdateFilter()
+        updateFilter()
     }
 
-    fun onLoadMore() {
-        getCharacters(filter.getFilter())
-    }
-
-    fun onRetry() {
-        onLoadUpdateFilter()
-    }
-
-    private fun onLoadUpdateFilter() {
-     //   _characterCache.clearCache()
-        page = 1
-        getCharacters(characterFilter = filter.getFilter())
-    }
-
-    private fun getCharacters(characterFilter: CharacterFilter) {
-
-    }
-
-    private fun handleSuccess(list: List<CharacterEntity>) {
-        page = page + 1
-        _characterState.value = CharacterState.Success
-
-        //_characterCache.value = list
-    }
-
-    private fun handleError(e: Exception) {
-        println("Error")
-        when (e) {
-            is UnknownHostException -> println()
-      /*          if (_characterCache.value.isEmpty()) {
-                    _characterState.value = CharacterState.NetworkError
-                } else {
-                    _characterState.value = CharacterState.NetworkPagingError
-                }*/
-
-            is HttpException ->println()
-           /*     if (_characterCache.value.isEmpty()) {
-                    _characterState.value = CharacterState.NotFound
-                } else {
-                    _characterState.value = CharacterState.NotFoundMore
-                }*/
-            is SocketTimeoutException -> _characterState.value = CharacterState.NetworkError
+    private fun updateFilter() {
+        viewModelScope.launch {
+            _requestChannel.send(filter.getFilter())
         }
     }
-
 }
+

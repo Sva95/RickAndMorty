@@ -1,7 +1,6 @@
 package com.example.testapi
 
 import android.app.Application
-
 import com.example.testapi.di.networkModule
 import com.example.testapi.di.repositoryModule
 import com.example.testapi.di.viewModelModule

@@ -11,7 +11,7 @@ class CharacterProfileMapper : Mapper<CharacterEntity, CharacterProfileEntity> {
             name = type.name
             status = type.status
             species = type.species
-            imgUrl = type.url
+            imgUrl = type.image
             locationEntity = type.location.name
             episode = type.episode
         }

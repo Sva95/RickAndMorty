@@ -74,7 +74,7 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+ <!--   <LinearLayout
         android:id="@+id/layout_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/retry_load_content" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <ProgressBar
         android:id="@+id/pb_load_content"
@@ -109,6 +109,7 @@
         android:id="@+id/rv_characters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,6 +5,7 @@ import com.example.testapi.data.remote.model.CharacterEntity
 import com.example.testapi.data.remote.model.CharacterResponse
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -13,18 +14,18 @@ import retrofit2.http.Query
 interface RickMortyApi {
 
     @GET("character")
-    fun getFilterUserNew(
+    suspend fun getCharacter(
         @Query("page") page: Int,
         @Query("name") name: String?,
         @Query("species") species: String?,
         @Query("status") status: String?
-    ): Flow<CharacterResponse>
+    ): CharacterResponse
 
 
     @GET("character/{id}")
-     fun getCharacterProfileById(
+    suspend fun getCharacterProfileById(
         @Path("id") id: Int
-    ): Flow<CharacterEntity>
+    ): CharacterEntity
 
 
 }

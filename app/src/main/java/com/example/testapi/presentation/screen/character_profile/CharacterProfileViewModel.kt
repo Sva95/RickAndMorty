@@ -15,22 +15,27 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+
+@ExperimentalCoroutinesApi
+@OptIn(InternalCoroutinesApi::class)
 class CharacterProfileViewModel(
     private val characterId: Int,
     private val characterEntityMapper: Mapper<CharacterEntity, CharacterProfileEntity>,
     private val rickAndMortyRepository: RickAndMortyRepository
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow<CharacterProfileUiState>(CharacterProfileUiState.Loading)
+    private val _uiState = MutableStateFlow<CharacterProfileUiState>(CharacterProfileUiState.Loading)
     val uiState: StateFlow<CharacterProfileUiState> = _uiState
 
     init {
         getUserProfile(characterId)
     }
 
-    @ExperimentalCoroutinesApi
-    @OptIn(InternalCoroutinesApi::class)
+    fun retry() {
+        getUserProfile(characterId)
+    }
+
+
     fun getUserProfile(idUser: Int) {
         viewModelScope.launch {
             rickAndMortyRepository.getCharacterProfile(idUser)

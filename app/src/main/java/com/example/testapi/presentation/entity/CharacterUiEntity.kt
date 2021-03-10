@@ -1,7 +1,7 @@
 package com.example.testapi.presentation.entity
 
 
-data class CharacterEntity(
+data class CharacterUiEntity(
     val id: Int,
     val name: String = "",
     val status: String = "",
