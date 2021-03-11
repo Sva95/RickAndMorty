@@ -7,9 +7,6 @@ import com.example.testapi.data.RickMortyApi
 import com.example.testapi.data.remote.model.CharacterEntity
 import com.example.testapi.util.CharacterFilterCapsule
 
-/*This class must be in the repository
-  but due to dynamic pagination (search, filtering) I use directly Source from ViewModel
- */
 class CharacterPagingSource(
     var characterFilter: CharacterFilterCapsule,
     val movieApiService: RickMortyApi,

@@ -19,41 +19,24 @@ import kotlinx.coroutines.flow.*
 @FlowPreview
 class CharacterViewModel(
     private val characterEntityMapper: Mapper<CharacterEntity, CharacterUiEntity>,
-    private val rickAndMortyRepository: RickAndMortyRepository,
-    private val movieRickMortyApi: RickMortyApi
+    private val rickAndMortyRepository: RickAndMortyRepository
 ) : ViewModel() {
 
-    private var _dataPagingSource: CharacterPagingSource? = null
     private val filter = CharacterFilterCapsule()
     private val _requestChannel = ConflatedBroadcastChannel(filter.getFilter())
+    val filterChannel: Flow<CharacterFilter> = _requestChannel.asFlow()
 
-    val requestChannel: Flow<CharacterFilter> = _requestChannel.asFlow()
-
-    private val charactersConfig = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            prefetchDistance = 2
-        ),
-        pagingSourceFactory = {
-            CharacterPagingSource(
-                movieApiService = movieRickMortyApi,
-                characterFilter = filter
-            ).also {
-                _dataPagingSource = it
-            }
-        }
-    ).flow
-        .map { it.map { characterEntityMapper.mapToEntity(it) } }
-        .cachedIn(viewModelScope)
-
-    val characters: Flow<PagingData<CharacterUiEntity>>
-        get() = charactersConfig
+    private val _characters = MutableStateFlow<PagingData<CharacterUiEntity>?>(null)
+    var characters: Flow<PagingData<CharacterUiEntity>> =
+        _characters.flatMapLatest { rickAndMortyRepository.getSearchCharacters() }
+            .map { it.map { characterEntityMapper.mapToEntity(it) } }
+            .cachedIn(viewModelScope)
 
     init {
         _requestChannel
             .asFlow()
             .debounce { 400 }
-            .onEach { _dataPagingSource?.invalidate() }
+            .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
             .launchIn(viewModelScope)
     }
 

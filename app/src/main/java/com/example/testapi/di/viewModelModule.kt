@@ -12,7 +12,6 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel {
         CharacterViewModel(
-            movieRickMortyApi = get(),
             rickAndMortyRepository = get(),
             characterEntityMapper = CharacterMapper()
         )

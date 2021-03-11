@@ -7,18 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navGraphViewModels
 import com.example.testapi.R
 import com.example.testapi.util.CharacterFilter
 import kotlinx.android.synthetic.main.dialog_filter_status.*
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
-import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class FilterStatusDialog : DialogFragment() {
@@ -38,7 +32,7 @@ class FilterStatusDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            characterViewModel.requestChannel.collect { characterFilter ->
+            characterViewModel.filterChannel.collect { characterFilter ->
                 (radioGroup.getChildAt(characterFilter.filterStatusPosition) as RadioButton).isChecked =
                     true
             }
