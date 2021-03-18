@@ -16,8 +16,9 @@ import com.example.testapi.util.Constant.Companion.ERROR_TYPE_VIEW_HOLDER
 
 
 class CharacterAdapter(
-    var onRetry: (() -> Unit)? = null
+    var onRetry: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<BaseViewHolder<CharacterEntity>>() {
+  //  : ListAdapter<CharacterEntity, BaseViewHolder<CharacterEntity>>(CharacterDiffCallback()) {
 
     private val characterList = mutableListOf<CharacterEntity>()
 
@@ -29,7 +30,10 @@ class CharacterAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<CharacterEntity> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<CharacterEntity> {
         val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
         return when (viewType) {
             R.layout.item_character -> CharacterViewHolder(view)
@@ -45,9 +49,9 @@ class CharacterAdapter(
         return R.layout.item_error_paging
     }
 
-    override fun getItemCount(): Int {
-        return characterList.size
-    }
+       override fun getItemCount(): Int {
+           return characterList.size
+       }
 
     override fun onBindViewHolder(holder: BaseViewHolder<CharacterEntity>, position: Int) {
         when (getItemViewType(position)) {
@@ -60,15 +64,18 @@ class CharacterAdapter(
         }
     }
 
-    fun removeErrorHolder() {
-        characterList.removeAt(characterList.size - 1)
-        notifyItemChanged(characterList.size - 1)
+
+    fun removeErrorHolder(position: Int) {
+        characterList.removeAt(position)
+        notifyItemChanged(position)
     }
 
     fun addPagingErrorItem(character: CharacterEntity) {
         characterList.add(character)
         notifyItemChanged(characterList.size - 1)
     }
+
+
 }
 
 

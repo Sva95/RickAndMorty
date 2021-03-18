@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
 import com.example.testapi.util.CharacterFilter
 import kotlinx.android.synthetic.main.dialog_filter_status.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
@@ -34,6 +38,7 @@ class FilterStatusDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         characterViewModel.observeFilterState.observe(viewLifecycleOwner) { characterFilter ->
             (radioGroup.getChildAt(characterFilter.filterStatusPosition) as RadioButton).isChecked =
                 true
@@ -54,9 +59,10 @@ class FilterStatusDialog : DialogFragment() {
         if (positionGroup > arrFilterSpecies.size - 1) {
             return
         }
-        val characterFilter = CharacterFilter()
-        characterFilter.filterStatusPosition = positionGroup
-        characterFilter.status = arrFilterSpecies[positionGroup]
-        characterViewModel.setFilterStatus(characterFilter)
+        CharacterFilter().apply {
+            filterStatusPosition = positionGroup
+            status = arrFilterSpecies[positionGroup]
+        }.also { characterViewModel.setFilterStatus(it) }
+
     }
 }

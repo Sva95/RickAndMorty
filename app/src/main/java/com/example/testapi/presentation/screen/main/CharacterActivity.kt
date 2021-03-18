@@ -33,9 +33,13 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
 
     private fun bindView() {
         characterAdapter = CharacterAdapter()
+        characterAdapter.adapterObserve {
+            rv_characters.scrollToPosition(0);
+            rv_characters.scheduleLayoutAnimation()
+        }
         characterAdapter.onRetry = {
             viewModel.onLoadMore()
-            characterAdapter.removeErrorHolder()
+            characterAdapter.removeErrorHolder(it)
         }
 
         rv_characters.apply {
@@ -68,6 +72,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
         viewModel.character.observe(this, {
             isLoading = false
             characterAdapter.setData(it)
+
         })
 
         viewModel.networkState.observe(this, {
@@ -101,7 +106,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
                     ).show()
                 }
                 is CharacterState.Progress -> {
-                    rv_characters.visibility = View.GONE
+                    //rv_characters.visibility = View.GONE
                     layout_error.visibility = View.GONE
                     pb_load_content.visibility = View.VISIBLE
                 }

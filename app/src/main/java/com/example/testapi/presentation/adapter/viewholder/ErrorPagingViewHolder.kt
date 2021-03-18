@@ -7,9 +7,9 @@ import kotlinx.android.synthetic.main.item_error_paging.view.*
 
 class ErrorPagingViewHolder(private val view: View) : BaseViewHolder<CharacterEntity>(view) {
 
-    override fun bind(item: CharacterEntity, callback: (() -> Unit)?) {
+    override fun bind(item: CharacterEntity, callback: ((Int) -> Unit)?) {
         view.btn_retry.setOnClickListener {
-            callback?.invoke()
+            callback?.invoke(adapterPosition)
         }
     }
 }

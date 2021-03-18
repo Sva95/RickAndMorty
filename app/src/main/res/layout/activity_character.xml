@@ -44,8 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/img_sort_character_planet"
@@ -106,6 +105,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="invisible"
+        android:layoutAnimation="@anim/anim_item_character"
         android:id="@+id/rv_characters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

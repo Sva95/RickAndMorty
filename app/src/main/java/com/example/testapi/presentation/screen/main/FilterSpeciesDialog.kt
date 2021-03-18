@@ -61,10 +61,12 @@ class FilterSpeciesDialog : DialogFragment() {
         if (positionGroup > arrFilterSpecies.size - 1) {
             return
         }
-        val characterFilter = CharacterFilter()
-        characterFilter.filterSpeciesPosition = positionGroup
-        characterFilter.species = arrFilterSpecies[positionGroup]
-        characterViewModel.setFilterSpecies(characterFilter)
+
+        CharacterFilter().apply {
+            filterSpeciesPosition = positionGroup
+            species = arrFilterSpecies[positionGroup]
+        }.also{  characterViewModel.setFilterSpecies(it)}
+
     }
 
 }
