@@ -39,8 +39,10 @@ class CharacterPagingSource(
                         filter.species,
                         filter.status
                     )
+
+                characterPrefs.setMaxPages(characterResponse.info.pages)
+
                 if (characterFilter.isFiltered()) {
-                    characterPrefs.setMaxPages(characterResponse.info.pages)
                     characterDao.insertAll(characterResponse.results.map { it.toDb(pageNumber) })
                 }
                 characters = characterResponse.results.map { it.toDomain() }
@@ -56,6 +58,8 @@ class CharacterPagingSource(
             return LoadResult.Error(e)
         }
     }
+
+
 
     override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int {
         return 1

@@ -3,7 +3,7 @@ ext {
             "koin"            : "2.2.2",
             "rxjava2"         : "2.2.19",
             "rxandroid"       : "2.1.1",
-            "glide"           : "4.11.0",
+            "glide"           : "4.9.0",
             "lifecycle"       : "2.2.0",
             "retrofit2"       : "2.9.0",
             "okhttp3"         : "4.4.0",
@@ -13,7 +13,8 @@ ext {
             "material"        : "1.2.1",
             "constraintlayout": "2.0.4",
             "nav_version"     : "2.3.2",
-            "paging_version"  : "3.0.0-beta01"
+            "paging_version"  : "3.0.0-beta01",
+            "room "   : "2.2.5"
 
     ]
 
@@ -67,14 +68,13 @@ ext {
     ]
 
     navigation = [
-            fragment_ktx : "androidx.navigation:navigation-fragment-ktx:${versions.nav_version}",
-            ui_ktx : "androidx.navigation:navigation-ui-ktx:${versions.nav_version}",
+            fragment_ktx             : "androidx.navigation:navigation-fragment-ktx:${versions.nav_version}",
+            ui_ktx                   : "androidx.navigation:navigation-ui-ktx:${versions.nav_version}",
             dynamic_features_fragment: "androidx.navigation:navigation-dynamic-features-fragment:${versions.nav_version}"
     ]
 
     paging = [
-            paging_runtime : "androidx.paging:paging-runtime:${versions.paging_version}"
+            paging_runtime: "androidx.paging:paging-runtime:${versions.paging_version}"
     ]
-
 
 }
