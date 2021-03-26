@@ -11,10 +11,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.testapi.R
+import com.example.testapi.base.BaseFragment
+import com.example.testapi.databinding.FragmentCharacterBinding
 import com.example.testapi.presentation.adapter.PagingLoadStateAdapter
 import com.example.testapi.paging.CharactersAdapter
 import com.example.testapi.util.*
-import kotlinx.android.synthetic.main.fragment_character.*
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ViewModelParameter
@@ -28,18 +29,12 @@ import org.koin.core.scope.Scope
 import org.koin.java.KoinJavaComponent.getKoin
 
 
-class CharacterFragment : Fragment() {
+class CharacterFragment :
+    BaseFragment<FragmentCharacterBinding>(FragmentCharacterBinding::inflate) {
 
     private val viewModel: CharacterViewModel by viewModel()
     private lateinit var characterAdapter: CharactersAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_character, container, false);
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,25 +50,28 @@ class CharacterFragment : Fragment() {
     private fun bindView() {
         characterAdapter = CharactersAdapter()
         with(characterAdapter) {
-            rv_characters.adapter = withLoadStateHeaderAndFooter(
+            binding.rvCharacters.adapter = withLoadStateHeaderAndFooter(
                 header = PagingLoadStateAdapter(this),
                 footer = PagingLoadStateAdapter(this)
             )
         }
 
-        sv_character.onQueryChange {
-            viewModel.setFilterName(it)
+        with(binding) {
+            svCharacter.onQueryChange {
+                viewModel.setFilterName(it)
+            }
+
+            svCharacter.clearFocus()
+            imgSortCharacterSpecies.setOnClickListener {
+                showFilterSpeciesDialog()
+            }
+
+            imgSortCharacterStatus.setOnClickListener {
+                showFilterStatusDialog()
+            }
+
         }
 
-        sv_character.clearFocus()
-
-        img_sort_character_species.setOnClickListener {
-            showFilterSpeciesDialog()
-        }
-
-        img_sort_character_status.setOnClickListener {
-            showFilterStatusDialog()
-        }
     }
 
     private fun showFilterStatusDialog() {

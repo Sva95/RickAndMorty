@@ -15,15 +15,17 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.testapi.R
+import com.example.testapi.base.BaseFragment
+import com.example.testapi.databinding.FragmentCharacterProfileBinding
 import com.example.testapi.presentation.entity.CharacterProfileEntity
 import com.example.testapi.util.CharacterProfileUiState
-import kotlinx.android.synthetic.main.fragment_character_profile.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class CharacterProfileFragment : Fragment(R.layout.fragment_character_profile) {
+class CharacterProfileFragment :
+    BaseFragment<FragmentCharacterProfileBinding>(FragmentCharacterProfileBinding::inflate) {
 
     private val args: CharacterProfileFragmentArgs by navArgs()
     private val viewModel: CharacterProfileViewModel by viewModel { parametersOf(args.characterId) }
@@ -32,7 +34,7 @@ class CharacterProfileFragment : Fragment(R.layout.fragment_character_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btn_retry_content.setOnClickListener {
+        binding.btnRetryContent.setOnClickListener {
             viewModel.retry()
         }
 
@@ -49,13 +51,15 @@ class CharacterProfileFragment : Fragment(R.layout.fragment_character_profile) {
 
     private fun showContent(characterProfileEntity: CharacterProfileEntity) {
         loadImage(characterProfileEntity.imgUrl)
-        txt_character_profile_name.setText(characterProfileEntity.name)
-        txt_character_planet_name.setText(characterProfileEntity.locationEntity)
-        txt_character_species_name.setText(characterProfileEntity.species)
-        txt_character_status_name.setText(characterProfileEntity.status)
-        pb_character_profile.setVisibility(View.INVISIBLE)
-        layout_error.setVisibility(View.GONE)
-        ll_profile_screen.setVisibility(View.VISIBLE)
+        with(binding) {
+            txtCharacterProfileName.setText(characterProfileEntity.name)
+            txtCharacterPlanetName.setText(characterProfileEntity.locationEntity)
+            txtCharacterSpeciesName.setText(characterProfileEntity.species)
+            txtCharacterStatusName.setText(characterProfileEntity.status)
+            pbCharacterProfile.setVisibility(View.INVISIBLE)
+            layoutError.setVisibility(View.GONE)
+            llProfileScreen.setVisibility(View.VISIBLE)
+        }
     }
 
     private fun loadImage(url: String) {
@@ -64,21 +68,23 @@ class CharacterProfileFragment : Fragment(R.layout.fragment_character_profile) {
             .centerCrop()
             .skipMemoryCache(true)
             .transition(DrawableTransitionOptions.withCrossFade())
-            .into(img_character_profile)
+            .into(binding.imgCharacterProfile)
     }
 
 
     private fun hideContent() {
-        pb_character_profile.setVisibility(View.INVISIBLE)
-        ll_profile_screen.setVisibility(View.INVISIBLE)
-        layout_error.setVisibility(View.VISIBLE)
+        with(binding) {
+            pbCharacterProfile.setVisibility(View.INVISIBLE)
+            llProfileScreen.setVisibility(View.INVISIBLE)
+            layoutError.setVisibility(View.VISIBLE)
+        }
     }
 
     private fun progressContent() {
-        layout_error.setVisibility(View.INVISIBLE)
-        pb_character_profile.setVisibility(View.VISIBLE)
-        ll_profile_screen.setVisibility(View.INVISIBLE)
+        with(binding) {
+            layoutError.setVisibility(View.INVISIBLE)
+            pbCharacterProfile.setVisibility(View.VISIBLE)
+            llProfileScreen.setVisibility(View.INVISIBLE)
+        }
     }
-
-
 }
