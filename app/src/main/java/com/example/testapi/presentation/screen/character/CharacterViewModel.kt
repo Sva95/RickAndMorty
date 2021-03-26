@@ -34,7 +34,7 @@ class CharacterViewModel(
     init {
         _requestChannel
             .asFlow()
-            .debounce { 400 }
+            .debounce { 150 }
             .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
             .launchIn(viewModelScope)
     }
