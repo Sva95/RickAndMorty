@@ -2,9 +2,8 @@ package com.example.testapi.presentation.screen.character
 
 import androidx.lifecycle.*
 import androidx.paging.*
-import com.example.testapi.data.RickMortyApi
-import com.example.testapi.data.remote.CharacterPagingSource
-import com.example.testapi.data.remote.model.CharacterEntity
+import com.example.testapi.data.remote.model.CharacterApi
+import com.example.testapi.domain.model.CharacterEntity
 import com.example.testapi.domain.repository.RickAndMortyRepository
 import com.example.testapi.presentation.entity.CharacterUiEntity
 import com.example.testapi.presentation.mapper.Mapper
@@ -27,7 +26,7 @@ class CharacterViewModel(
     val filterChannel: Flow<CharacterFilter> = _requestChannel.asFlow()
 
     private val _characters = MutableStateFlow<PagingData<CharacterUiEntity>?>(null)
-    var characters: Flow<PagingData<CharacterUiEntity>> =
+     var characters: Flow<PagingData<CharacterUiEntity>> =
         _characters.flatMapLatest { rickAndMortyRepository.getSearchCharacters() }
             .map { it.map { characterEntityMapper.mapToEntity(it) } }
             .cachedIn(viewModelScope)
@@ -36,7 +35,7 @@ class CharacterViewModel(
         _requestChannel
             .asFlow()
             .debounce { 400 }
-            .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
+           // .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
             .launchIn(viewModelScope)
     }
 
@@ -44,6 +43,7 @@ class CharacterViewModel(
         if (userName == filter.getFilter().name) return
         filter.updateFilterName(userName)
         updateFilter()
+
     }
 
     fun setFilterStatus(characterFilter: CharacterFilter) {

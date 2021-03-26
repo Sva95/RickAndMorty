@@ -1,9 +1,8 @@
 package com.example.testapi.data
 
 
-import com.example.testapi.data.remote.model.CharacterEntity
+import com.example.testapi.data.remote.model.CharacterApi
 import com.example.testapi.data.remote.model.CharacterResponse
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.GET
@@ -25,7 +24,6 @@ interface RickMortyApi {
     @GET("character/{id}")
     suspend fun getCharacterProfileById(
         @Path("id") id: Int
-    ): CharacterEntity
-
+    ): CharacterApi
 
 }

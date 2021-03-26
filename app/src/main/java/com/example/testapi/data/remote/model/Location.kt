@@ -2,7 +2,7 @@ package com.example.testapi.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class LocationEntity(
+data class Location(
     @SerializedName("name") val name: String,
     @SerializedName("url") val url: String
 )

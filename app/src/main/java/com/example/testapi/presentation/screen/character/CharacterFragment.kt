@@ -30,7 +30,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 class CharacterFragment : Fragment() {
 
-    private val viewModel: CharacterViewModel by sharedViewModel()
+    private val viewModel: CharacterViewModel by viewModel()
     private lateinit var characterAdapter: CharactersAdapter
 
     override fun onCreateView(

@@ -4,24 +4,22 @@ package com.example.testapi.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import com.example.testapi.data.RickMortyApi
+import com.example.testapi.data.local.CharacterDao
+import com.example.testapi.data.prefs.CharacterSharedPrefs
 import com.example.testapi.data.remote.CharacterPagingSource
-import com.example.testapi.data.remote.model.CharacterEntity
-import com.example.testapi.data.remote.model.CharacterResponse
+import com.example.testapi.data.remote.model.CharacterApi
+import com.example.testapi.domain.model.CharacterEntity
 import com.example.testapi.domain.repository.RickAndMortyRepository
-import com.example.testapi.presentation.entity.CharacterUiEntity
-import com.example.testapi.presentation.mapper.Mapper
 import com.example.testapi.util.CharacterFilter
 import com.example.testapi.util.CharacterFilterCapsule
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 
 class RickAndMortyRepositoryImpl(
-    private val api: RickMortyApi
+    private val api: RickMortyApi,
+    private val characterDao: CharacterDao,
+    private val characterPrefs: CharacterSharedPrefs
 ) : RickAndMortyRepository {
 
     private var filter = CharacterFilterCapsule()
@@ -36,7 +34,9 @@ class RickAndMortyRepositoryImpl(
             pagingSourceFactory = {
                 CharacterPagingSource(
                     movieApiService = api,
-                    characterFilter = filter
+                    characterFilter = filter,
+                    characterDao = characterDao,
+                    characterPrefs = characterPrefs
                 ).also {
                     dataPagingSource = it
                 }
@@ -49,7 +49,7 @@ class RickAndMortyRepositoryImpl(
         dataPagingSource?.invalidate()
     }
 
-    override suspend fun getCharacterProfile(userId: Int): Flow<CharacterEntity> {
+    override suspend fun getCharacterProfile(userId: Int): Flow<CharacterApi> {
         return flow {
             val result = api.getCharacterProfileById(userId)
             emit(result)

@@ -7,5 +7,11 @@ import org.koin.dsl.module
 
 
 val repositoryModule = module {
-    single<RickAndMortyRepository> { RickAndMortyRepositoryImpl(api = get()) }
+    single<RickAndMortyRepository> {
+        RickAndMortyRepositoryImpl(
+            api = get(),
+            characterDao = get(),
+            characterPrefs = get()
+        )
+    }
 }

@@ -2,8 +2,7 @@ package com.example.testapi.presentation.screen.character_profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testapi.data.remote.model.CharacterEntity
-import com.example.testapi.data.remote.model.CharacterResponse
+import com.example.testapi.data.remote.model.CharacterApi
 import com.example.testapi.domain.repository.RickAndMortyRepository
 
 import com.example.testapi.presentation.entity.CharacterProfileEntity
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 @OptIn(InternalCoroutinesApi::class)
 class CharacterProfileViewModel(
     private val characterId: Int,
-    private val characterEntityMapper: Mapper<CharacterEntity, CharacterProfileEntity>,
+    private val characterEntityMapper: Mapper<CharacterApi, CharacterProfileEntity>,
     private val rickAndMortyRepository: RickAndMortyRepository
 ) : ViewModel() {
 
