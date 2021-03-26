@@ -25,11 +25,10 @@ class RickAndMortyRepositoryImpl(
     private var filter = CharacterFilterCapsule()
     private var dataPagingSource: CharacterPagingSource? = null
 
-    override suspend fun getSearchCharacters(): Flow<PagingData<CharacterEntity>> {
+      override fun getSearchCharacters(): Flow<PagingData<CharacterEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
-                prefetchDistance = 2
             ),
             pagingSourceFactory = {
                 CharacterPagingSource(

@@ -16,7 +16,7 @@ data class CharacterDb(
     val origin: String,
     val location: String,
     val image: String,
-    val page: Int
+    @ColumnInfo(name = "page") val page: Int
 )
 
 fun CharacterApi.toDomain(): CharacterEntity {
@@ -46,17 +46,17 @@ fun CharacterDb.toDomain(): CharacterEntity {
 }
 
 
-fun CharacterApi.toDb(): CharacterDb {
+fun CharacterApi.toDb(page: Int): CharacterDb {
     return CharacterDb(
         id = id,
         name = name,
         status = status,
         species = species,
-        image = url,
+        image = image,
         location = location.name,
         gender = gender,
         origin = origin.name,
-        page = 1
+        page = page
     )
 }
 

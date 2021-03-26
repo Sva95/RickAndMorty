@@ -35,7 +35,7 @@ class CharacterViewModel(
         _requestChannel
             .asFlow()
             .debounce { 400 }
-           // .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
+            .onEach { rickAndMortyRepository.invalidateDataSource(filter) }
             .launchIn(viewModelScope)
     }
 
@@ -43,7 +43,6 @@ class CharacterViewModel(
         if (userName == filter.getFilter().name) return
         filter.updateFilterName(userName)
         updateFilter()
-
     }
 
     fun setFilterStatus(characterFilter: CharacterFilter) {

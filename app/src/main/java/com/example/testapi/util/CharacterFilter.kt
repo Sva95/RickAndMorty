@@ -14,13 +14,19 @@ class CharacterFilterCapsule {
     private val _userFilter = CharacterFilter()
     fun getFilter() = _userFilter
 
+
+    fun isFiltered() =
+        _userFilter.name.isEmpty() && _userFilter.status.isEmpty() && _userFilter.species.isEmpty()
+
+
     fun updateFilterName(name: String) {
         _userFilter.name = name
     }
 
     fun updateFilterStatus(characterFilter: CharacterFilter) {
         if (characterFilter.status != _userFilter.status) {
-            val status = if (characterFilter.filterStatusPosition == 0) "" else characterFilter.status
+            val status =
+                if (characterFilter.filterStatusPosition == 0) "" else characterFilter.status
             _userFilter.status = status
             _userFilter.filterStatusPosition = characterFilter.filterStatusPosition
         }
@@ -28,7 +34,8 @@ class CharacterFilterCapsule {
 
     fun updateFilterSpecies(characterFilter: CharacterFilter) {
         if (characterFilter.species != _userFilter.species) {
-            val species = if (characterFilter.filterSpeciesPosition == 0) "" else characterFilter.species
+            val species =
+                if (characterFilter.filterSpeciesPosition == 0) "" else characterFilter.species
             _userFilter.species = species
             _userFilter.filterSpeciesPosition = characterFilter.filterSpeciesPosition
         }

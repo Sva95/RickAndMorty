@@ -28,8 +28,9 @@ class FilterStatusDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_filter_status, container, false)
+    ): View {
+        _binding = DialogFilterStatusBinding.inflate(LayoutInflater.from(context))
+        return  binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

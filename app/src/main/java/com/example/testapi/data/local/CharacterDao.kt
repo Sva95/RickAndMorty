@@ -8,15 +8,17 @@ import androidx.room.Query
 @Dao
 interface CharacterDao {
 
-    @Query(
-        "SELECT * FROM character WHERE name LIKE :name"
-    )
+    @Query("SELECT * FROM character WHERE page LIKE :page")
     suspend fun getCharactersOnPage(
-        page: Int,
-        name: String,
-        status: String,
-        species: String
+        page: Int
     ): List<CharacterDb>
+
+
+    @Query("SELECT * FROM character")
+    suspend fun getCharacters(
+
+    ): List<CharacterDb>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(characters: List<CharacterDb>)

@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
 import com.example.testapi.databinding.DialogFilterSpeciesBinding
+import com.example.testapi.databinding.DialogFilterStatusBinding
 import com.example.testapi.util.CharacterFilter
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -26,8 +27,9 @@ class FilterSpeciesDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_filter_species, container, false)
+    ): View {
+        _binding = DialogFilterSpeciesBinding.inflate(LayoutInflater.from(context))
+        return  binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

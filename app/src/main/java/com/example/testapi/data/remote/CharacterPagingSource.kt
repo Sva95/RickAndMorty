@@ -23,14 +23,15 @@ class CharacterPagingSource(
         val pageNumber = params.key ?: 1
         try {
             val filter = characterFilter.getFilter()
-            var characters = characterDao.getCharactersOnPage(
-                pageNumber,
-                filter.name,
-                filter.status,
-                filter.species
-            ).map { it.toDomain() }
+            var characters: List<CharacterEntity>? = null
 
-            if (characters.isEmpty()) {
+            if (characterFilter.isFiltered()) {
+                characters = characterDao.getCharactersOnPage(
+                    pageNumber
+                ).map { it.toDomain() }
+            }
+
+            if (characters.isNullOrEmpty()) {
                 val characterResponse =
                     movieApiService.getCharacter(
                         pageNumber,
@@ -38,8 +39,10 @@ class CharacterPagingSource(
                         filter.species,
                         filter.status
                     )
-                characterPrefs.setMaxPages(characterResponse.info.pages)
-                characterDao.insertAll(characterResponse.results.map { it.toDb() })
+                if (characterFilter.isFiltered()) {
+                    characterPrefs.setMaxPages(characterResponse.info.pages)
+                    characterDao.insertAll(characterResponse.results.map { it.toDb(pageNumber) })
+                }
                 characters = characterResponse.results.map { it.toDomain() }
             }
 
@@ -49,30 +52,12 @@ class CharacterPagingSource(
                 nextKey = if (characterPrefs.getMaxPages() > pageNumber) pageNumber + 1 else null
             )
 
-/*            val response = characterService.getCharacters(pageNumber)
-
-            val filter = characterFilter.getFilter()
-            val response =
-                movieApiService.getCharacter(pageNumber, filter.name, filter.species, filter.status)
-            val pagedResponse = response
-            val data = pagedResponse.results
-
-            val nextPageNumber: Int?
-            val uri = Uri.parse(pagedResponse.info.next)
-            val nextPageQuery = uri.getQueryParameter("page")
-            nextPageNumber = nextPageQuery?.toInt()
-            return LoadResult.Page(
-                data = data,
-                prevKey = null,
-                nextKey = nextPageNumber
-            )*/
-
         } catch (e: Exception) {
             return LoadResult.Error(e)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int? {
-        return state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int {
+        return 1
     }
 }
