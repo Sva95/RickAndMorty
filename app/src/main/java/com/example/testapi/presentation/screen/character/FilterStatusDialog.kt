@@ -9,13 +9,17 @@ import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
+import com.example.testapi.databinding.DialogFilterSpeciesBinding
+import com.example.testapi.databinding.DialogFilterStatusBinding
 import com.example.testapi.util.CharacterFilter
-import kotlinx.android.synthetic.main.dialog_filter_status.*
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class FilterStatusDialog : DialogFragment() {
+
+    private var _binding: DialogFilterStatusBinding? = null
+    private val binding get() = _binding!!
 
     private val characterViewModel: CharacterViewModel by sharedViewModel()
     private var positionGroup = 0
@@ -33,19 +37,22 @@ class FilterStatusDialog : DialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             characterViewModel.filterChannel.collect { characterFilter ->
-                (radioGroup.getChildAt(characterFilter.filterStatusPosition) as RadioButton).isChecked =
+                (binding.radioGroup.getChildAt(characterFilter.filterStatusPosition) as RadioButton).isChecked =
                     true
             }
         }
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radioChecked: View = group.findViewById(checkedId)
-            positionGroup = group.indexOfChild(radioChecked)
+        with(binding){
+            radioGroup.setOnCheckedChangeListener { group, checkedId ->
+                val radioChecked: View = group.findViewById(checkedId)
+                positionGroup = group.indexOfChild(radioChecked)
+            }
+            btnOk.setOnClickListener {
+                setFilterStatus()
+                dismiss()
+            }
+            btnCancel.setOnClickListener { dismiss() }
+
         }
-        btn_ok.setOnClickListener {
-            setFilterStatus()
-            dismiss()
-        }
-        btn_cancel.setOnClickListener { dismiss() }
     }
 
     private fun setFilterStatus() {

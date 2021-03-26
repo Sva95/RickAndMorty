@@ -5,22 +5,23 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapi.base.BaseViewHolder
+import com.example.testapi.databinding.ItemErrorPagingBinding
 import com.example.testapi.presentation.entity.CharacterUiEntity
-import kotlinx.android.synthetic.main.item_error_paging.view.*
+
 
 class ErrorPagingViewHolder(
-    private val view: View,
+    private val view: ItemErrorPagingBinding,
     private val retryCallback: (() -> Unit)?
-) : RecyclerView.ViewHolder(view) {
+) : RecyclerView.ViewHolder(view.root) {
 
     fun bind(loadState: LoadState) {
         with(view) {
-            progress_bar.isVisible = loadState is LoadState.Loading
-            retry_button.isVisible = loadState is LoadState.Error
-            error_msg.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
-            error_msg.text = (loadState as? LoadState.Error)?.error?.message
+            progressBar.isVisible = loadState is LoadState.Loading
+            retryButton.isVisible = loadState is LoadState.Error
+            errorMsg.isVisible = !(loadState as? LoadState.Error)?.error?.message.isNullOrBlank()
+            errorMsg.text = (loadState as? LoadState.Error)?.error?.message
 
-            retry_button.setOnClickListener {
+            retryButton.setOnClickListener {
                 retryCallback?.invoke()
             }
         }

@@ -9,8 +9,10 @@ import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapi.R
+import com.example.testapi.databinding.ItemCharacterBinding
+import com.example.testapi.databinding.ItemErrorPagingBinding
+import com.example.testapi.presentation.adapter.viewholder.CharacterViewHolder
 import com.example.testapi.presentation.adapter.viewholder.ErrorPagingViewHolder
-import kotlinx.android.synthetic.main.item_error_paging.view.*
 
 class PagingLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
     private val adapter: PagingDataAdapter<T, VH>
@@ -23,8 +25,10 @@ class PagingLoadStateAdapter<T : Any, VH : RecyclerView.ViewHolder>(
         parent: ViewGroup,
         loadState: LoadState
     ): ErrorPagingViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_error_paging, parent, false)
-        return ErrorPagingViewHolder(view, { adapter.refresh() })
+
+        val itemCharacterBinding: ItemErrorPagingBinding =
+            ItemErrorPagingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ErrorPagingViewHolder(itemCharacterBinding,{ adapter.refresh() })
+
     }
 }

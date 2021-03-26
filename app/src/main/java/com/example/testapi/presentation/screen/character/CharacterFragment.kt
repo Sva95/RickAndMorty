@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +33,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 class CharacterFragment :
     BaseFragment<FragmentCharacterBinding>(FragmentCharacterBinding::inflate) {
 
-    private val viewModel: CharacterViewModel by viewModel()
+    private val viewModel: CharacterViewModel by sharedViewModel()
     private lateinit var characterAdapter: CharactersAdapter
 
 

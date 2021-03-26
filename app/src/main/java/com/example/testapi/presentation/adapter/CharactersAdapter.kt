@@ -6,11 +6,13 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapi.R
+import com.example.testapi.databinding.ItemCharacterBinding
 import com.example.testapi.presentation.adapter.viewholder.CharacterViewHolder
 import com.example.testapi.presentation.entity.CharacterUiEntity
 
 class CharactersAdapter(
-    var onClickProfile: (() -> Unit)? = null) :
+    var onClickProfile: (() -> Unit)? = null
+) :
     PagingDataAdapter<CharacterUiEntity, RecyclerView.ViewHolder>(CharacterComparator) {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -24,8 +26,9 @@ class CharactersAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-        return CharacterViewHolder(view)
+        val itemCharacterBinding: ItemCharacterBinding =
+            ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CharacterViewHolder(itemCharacterBinding)
     }
 
 }

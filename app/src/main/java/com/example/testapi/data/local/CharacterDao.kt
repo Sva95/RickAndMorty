@@ -9,10 +9,7 @@ import androidx.room.Query
 interface CharacterDao {
 
     @Query(
-        "SELECT * FROM character WHERE page LIKE :page" +
-                "AND name LIKE :name " +
-                "AND status LIKE :status" +
-                "AND species LIKE :species"
+        "SELECT * FROM character WHERE name LIKE :name"
     )
     suspend fun getCharactersOnPage(
         page: Int,

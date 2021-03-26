@@ -69,8 +69,8 @@ dependencies {
     annotationProcessor glide.compile*/
 
   /*  kapt "android.arch.lifecycle:compiler:1.1.1"*/
-    implementation "com.github.bumptech.glide:glide:4.11.0"
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+/*    implementation "com.github.bumptech.glide:glide:4.11.0"
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'*/
 
     implementation koin.core
     implementation koin.android
@@ -87,13 +87,14 @@ dependencies {
     implementation navigation.dynamic_features_fragment
 
     implementation paging.paging_runtime
-
     def room_version = "2.2.5"
+/*    def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"*/
+    implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
-
+    implementation "androidx.room:room-ktx:$room_version"
 /*    implementation "androidx.room:room-ktx:$version"
     implementation "androidx.room:room-compiler:$version"
     implementation 'androidx.room:room-runtime:2.2.6'*/

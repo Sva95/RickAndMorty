@@ -1,5 +1,6 @@
 package com.example.testapi.data.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.testapi.data.remote.model.CharacterApi
@@ -8,7 +9,7 @@ import com.example.testapi.domain.model.CharacterEntity
 @Entity(tableName = "character")
 data class CharacterDb(
     @PrimaryKey(autoGenerate = false) val id: Int,
-    val name: String,
+    @ColumnInfo(name = "name") val name: String,
     val status: String,
     val species: String,
     val gender: String,
@@ -43,7 +44,6 @@ fun CharacterDb.toDomain(): CharacterEntity {
         origin = origin
     )
 }
-
 
 
 fun CharacterApi.toDb(): CharacterDb {

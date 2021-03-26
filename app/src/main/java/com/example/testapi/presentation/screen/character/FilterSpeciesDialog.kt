@@ -8,13 +8,16 @@ import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
+import com.example.testapi.databinding.DialogFilterSpeciesBinding
 import com.example.testapi.util.CharacterFilter
-import kotlinx.android.synthetic.main.dialog_filter_species.*
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class FilterSpeciesDialog : DialogFragment() {
+
+    private var _binding: DialogFilterSpeciesBinding? = null
+    private val binding get() = _binding!!
 
     private val characterViewModel: CharacterViewModel by sharedViewModel()
     private var positionGroup = 0
@@ -31,21 +34,24 @@ class FilterSpeciesDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             characterViewModel.filterChannel.collect { characterFilter ->
-                (radioGroup.getChildAt(characterFilter.filterSpeciesPosition) as RadioButton).isChecked =
+                (binding.radioGroup.getChildAt(characterFilter.filterSpeciesPosition) as RadioButton).isChecked =
                     true
             }
         }
+        with(binding) {
+            radioGroup.setOnCheckedChangeListener { group, checkedId ->
+                val radioChecked: View = group.findViewById(checkedId)
+                positionGroup = group.indexOfChild(radioChecked)
+            }
 
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val radioChecked: View = group.findViewById(checkedId)
-            positionGroup = group.indexOfChild(radioChecked)
-        }
+            btnOk.setOnClickListener {
+                setFilterSpecies()
+                dismiss()
+            }
 
-        btn_ok.setOnClickListener {
-            setFilterSpecies()
-            dismiss()
+            btnCancel.setOnClickListener { dismiss() }
+
         }
-        btn_cancel.setOnClickListener { dismiss() }
     }
 
     private fun setFilterSpecies() {
@@ -57,6 +63,11 @@ class FilterSpeciesDialog : DialogFragment() {
         characterFilter.filterSpeciesPosition = positionGroup
         characterFilter.species = arrFilterSpecies[positionGroup]
         characterViewModel.setFilterSpecies(characterFilter)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
