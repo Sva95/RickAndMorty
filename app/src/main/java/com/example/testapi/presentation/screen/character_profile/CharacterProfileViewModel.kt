@@ -23,7 +23,7 @@ class CharacterProfileViewModel(
     private val rickAndMortyRepository: RickAndMortyRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<CharacterProfileUiState>(CharacterProfileUiState.Loading)
+    private val _uiState = MutableStateFlow<CharacterProfileUiState>(CharacterProfileUiState.Empty)
     val uiState: StateFlow<CharacterProfileUiState> = _uiState
 
     init {
@@ -33,7 +33,6 @@ class CharacterProfileViewModel(
     fun retry() {
         getUserProfile(characterId)
     }
-
 
     fun getUserProfile(idUser: Int) {
         viewModelScope.launch {
@@ -52,5 +51,4 @@ class CharacterProfileViewModel(
     private fun handleSuccess(characterId: CharacterProfileEntity) {
         _uiState.value = CharacterProfileUiState.Success(characterId)
     }
-
 }

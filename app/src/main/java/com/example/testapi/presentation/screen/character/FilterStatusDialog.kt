@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
 import com.example.testapi.databinding.DialogFilterSpeciesBinding

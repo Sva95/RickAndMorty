@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
 import com.example.testapi.databinding.DialogFilterSpeciesBinding
@@ -29,17 +31,19 @@ class FilterSpeciesDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = DialogFilterSpeciesBinding.inflate(LayoutInflater.from(context))
-        return  binding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             characterViewModel.filterChannel.collect { characterFilter ->
                 (binding.radioGroup.getChildAt(characterFilter.filterSpeciesPosition) as RadioButton).isChecked =
                     true
             }
         }
+        
         with(binding) {
             radioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioChecked: View = group.findViewById(checkedId)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.example.testapi.presentation.adapter.PagingLoadStateAdapter
 import com.example.testapi.paging.CharactersAdapter
 import com.example.testapi.util.*
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.android.ext.android.getKoin
 import org.koin.androidx.viewmodel.ViewModelParameter
 import org.koin.androidx.viewmodel.compat.ScopeCompat.viewModel
@@ -36,12 +38,11 @@ class CharacterFragment :
     private val viewModel: CharacterViewModel by sharedViewModel()
     private lateinit var characterAdapter: CharactersAdapter
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindView()
 
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.characters.collectLatest {
                 characterAdapter.submitData(it)
             }

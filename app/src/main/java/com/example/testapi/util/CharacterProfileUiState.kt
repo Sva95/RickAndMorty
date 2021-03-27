@@ -6,4 +6,5 @@ sealed class CharacterProfileUiState {
     data class Success(val profile: CharacterProfileEntity): CharacterProfileUiState()
     data class Error(val exception: Throwable): CharacterProfileUiState()
     object Loading: CharacterProfileUiState()
+    object Empty: CharacterProfileUiState()
 }
