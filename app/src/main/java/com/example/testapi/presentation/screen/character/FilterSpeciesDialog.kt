@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.testapi.R
+import com.example.testapi.base.BaseDialogFragment
 import com.example.testapi.databinding.DialogFilterSpeciesBinding
 import com.example.testapi.databinding.DialogFilterStatusBinding
 import com.example.testapi.util.CharacterFilter
@@ -17,22 +18,11 @@ import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class FilterSpeciesDialog : DialogFragment() {
-
-    private var _binding: DialogFilterSpeciesBinding? = null
-    private val binding get() = _binding!!
+class FilterSpeciesDialog :
+    BaseDialogFragment<DialogFilterSpeciesBinding>(DialogFilterSpeciesBinding::inflate) {
 
     private val characterViewModel: CharacterViewModel by sharedViewModel()
     private var positionGroup = 0
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = DialogFilterSpeciesBinding.inflate(LayoutInflater.from(context))
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,7 +33,7 @@ class FilterSpeciesDialog : DialogFragment() {
                     true
             }
         }
-        
+
         with(binding) {
             radioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioChecked: View = group.findViewById(checkedId)
@@ -54,7 +44,6 @@ class FilterSpeciesDialog : DialogFragment() {
                 setFilterSpecies()
                 dismiss()
             }
-
             btnCancel.setOnClickListener { dismiss() }
 
         }
@@ -65,15 +54,13 @@ class FilterSpeciesDialog : DialogFragment() {
         if (positionGroup > arrFilterSpecies.size - 1) {
             return
         }
-        val characterFilter = CharacterFilter()
-        characterFilter.filterSpeciesPosition = positionGroup
-        characterFilter.species = arrFilterSpecies[positionGroup]
-        characterViewModel.setFilterSpecies(characterFilter)
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        CharacterFilter().apply {
+            filterSpeciesPosition = positionGroup
+            species = arrFilterSpecies[positionGroup]
+        }.also {
+            characterViewModel.setFilterSpecies(it)
+        }
     }
 
 }
