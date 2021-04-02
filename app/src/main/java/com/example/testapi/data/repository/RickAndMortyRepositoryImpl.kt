@@ -48,11 +48,8 @@ class RickAndMortyRepositoryImpl(
         dataPagingSource?.invalidate()
     }
 
-    override suspend fun getCharacterProfile(userId: Int): Flow<CharacterApi> {
-        return flow {
-            val result = api.getCharacterProfileById(userId)
-            emit(result)
-        }
+    override suspend fun getCharacterProfile(userId: Int): CharacterApi {
+        return api.getCharacterProfileById(userId)
     }
 }
 

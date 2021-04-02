@@ -50,6 +50,7 @@ ext {
             compile: "com.github.bumptech.glide:compiler:${versions.glide}"
     ]
 
+
     lifecycle = [
             extensions: "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}",
             viewmodel : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}",

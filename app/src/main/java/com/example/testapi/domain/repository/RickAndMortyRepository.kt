@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RickAndMortyRepository {
 
-     fun getSearchCharacters(): Flow<PagingData<CharacterEntity>>
+    fun getSearchCharacters(): Flow<PagingData<CharacterEntity>>
 
-    suspend fun getCharacterProfile(userId: Int): Flow<CharacterApi>
+    suspend fun getCharacterProfile(userId: Int): CharacterApi
 
     fun invalidateDataSource(filter: CharacterFilterCapsule)
 

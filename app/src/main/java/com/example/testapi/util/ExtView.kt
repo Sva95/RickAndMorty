@@ -1,7 +1,11 @@
 package com.example.testapi.util
+import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 
 fun SearchView.onQueryChange(query: (String) -> Unit) {
@@ -16,4 +20,14 @@ fun SearchView.onQueryChange(query: (String) -> Unit) {
             return true
         }
     })
+}
+
+
+fun ImageView.loadProfileImage(url: String){
+    Glide.with(this)
+        .load(url)
+        .centerCrop()
+        .skipMemoryCache(true)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(this)
 }

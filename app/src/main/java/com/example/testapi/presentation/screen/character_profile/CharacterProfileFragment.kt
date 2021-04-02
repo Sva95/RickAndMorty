@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -19,6 +20,7 @@ import com.example.testapi.base.BaseFragment
 import com.example.testapi.databinding.FragmentCharacterProfileBinding
 import com.example.testapi.presentation.entity.CharacterProfileEntity
 import com.example.testapi.util.CharacterProfileUiState
+import com.example.testapi.util.loadProfileImage
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,7 +32,6 @@ class CharacterProfileFragment :
     private val args: CharacterProfileFragmentArgs by navArgs()
     private val viewModel: CharacterProfileViewModel by viewModel { parametersOf(args.characterId) }
 
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,15 +39,13 @@ class CharacterProfileFragment :
             viewModel.retry()
         }
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.uiState.collect {
-                when (it) {
-                    is CharacterProfileUiState.Success -> showContent(it.profile)
-                    is CharacterProfileUiState.Loading -> progressContent()
-                    is CharacterProfileUiState.Error -> hideContent()
-                }
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is CharacterProfileUiState.Success -> showContent(it.profile)
+                is CharacterProfileUiState.Loading -> progressContent()
+                is CharacterProfileUiState.Error -> hideContent()
             }
-        }
+        })
     }
 
     private fun showContent(characterProfileEntity: CharacterProfileEntity) {
@@ -63,12 +62,7 @@ class CharacterProfileFragment :
     }
 
     private fun loadImage(url: String) {
-        Glide.with(this)
-            .load(url)
-            .centerCrop()
-            .skipMemoryCache(true)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(binding.imgCharacterProfile)
+        binding.imgCharacterProfile.loadProfileImage(url)
     }
 
 
