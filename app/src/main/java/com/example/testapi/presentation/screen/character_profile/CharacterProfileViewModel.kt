@@ -29,12 +29,8 @@ class CharacterProfileViewModel(
         viewModelScope.launch {
             _uiState.value = CharacterProfileUiState.Loading
             try {
-                coroutineScope {
-                    val user = async(Dispatchers.IO) {
-                        rickAndMortyRepository.getCharacterProfile(characterId).toProfileUi()
-                    }
-                    _uiState.value = CharacterProfileUiState.Success(user.await())
-                }
+                val user = rickAndMortyRepository.getCharacterProfile(characterId).toProfileUi()
+                _uiState.value = CharacterProfileUiState.Success(user)
             } catch (e: Exception) {
                 _uiState.value = CharacterProfileUiState.Error(e)
             }
