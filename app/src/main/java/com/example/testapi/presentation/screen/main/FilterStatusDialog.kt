@@ -62,7 +62,7 @@ class FilterStatusDialog : DialogFragment() {
         CharacterFilter().apply {
             filterStatusPosition = positionGroup
             status = arrFilterSpecies[positionGroup]
-        }.also { characterViewModel.setFilterStatus(it) }
+        }.also { characterViewModel.updateFilterStatus(it) }
 
     }
 }

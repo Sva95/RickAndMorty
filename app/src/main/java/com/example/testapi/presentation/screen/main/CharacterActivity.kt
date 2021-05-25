@@ -11,7 +11,6 @@ import com.example.testapi.util.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.TimeUnit
 
 
 class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
@@ -20,10 +19,6 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
     private val linearLayoutManager = WrapContentLinearLayoutManager(this)
     private lateinit var characterAdapter: CharacterAdapter
     private var isLoading = false
-
-    private val debouncer = Debouncer(400, TimeUnit.MILLISECONDS) {
-        viewModel.setFilterName(it)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +33,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
             rv_characters.scheduleLayoutAnimation()
         }
         characterAdapter.onRetry = {
-            viewModel.onLoadMore()
+            viewModel.onRetryPaging()
             characterAdapter.removeErrorHolder(it)
         }
 
@@ -50,7 +45,7 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
         }
 
         sv_character.onQueryChange {
-            debouncer.process(it)
+            viewModel.updateCharacterName(it)
         }
 
         sv_character.clearFocus()
@@ -72,7 +67,6 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
         viewModel.character.observe(this, {
             isLoading = false
             characterAdapter.setData(it)
-
         })
 
         viewModel.networkState.observe(this, {
@@ -93,7 +87,8 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
                     layout_error.visibility = View.GONE
                     rv_characters.removeOnScrollListener(paginationScrollListener)
                     characterAdapter.addPagingErrorItem(CharacterEntity(id = Constant.ERROR_TYPE_VIEW_HOLDER))
-                    rv_characters.scrollToPosition(characterAdapter.getItemCount() - 1);
+                    rv_characters.scrollToPosition(characterAdapter.getItemCount() - 1)
+                    rv_characters.visibility = View.VISIBLE
                 }
                 is CharacterState.NotFound -> {
                     pb_load_content.visibility = View.GONE
@@ -106,7 +101,6 @@ class CharacterActivity : AppCompatActivity(R.layout.activity_character) {
                     ).show()
                 }
                 is CharacterState.Progress -> {
-                    //rv_characters.visibility = View.GONE
                     layout_error.visibility = View.GONE
                     pb_load_content.visibility = View.VISIBLE
                 }

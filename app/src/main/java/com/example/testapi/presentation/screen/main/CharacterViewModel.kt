@@ -13,9 +13,11 @@ import com.example.testapi.util.CharacterState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 class CharacterViewModel(
     private val characterEntityMapper: Mapper<CharacterResponse, List<CharacterEntity>>,
@@ -24,6 +26,7 @@ class CharacterViewModel(
 
     private var page = 1
     private var disposePagin: Disposable? = null
+    private val characterSubject = PublishSubject.create<CharacterFilter>()
     private val filter = CharacterFilterCapsule()
 
     private val _characterCache = CacheLiveData()
@@ -40,54 +43,74 @@ class CharacterViewModel(
 
     init {
         _filterState.value = filter.getFilter()
-        onLoadUpdateFilter()
+        initCharacterSubject()
     }
 
-    fun setFilterName(userName: String) {
-        if (userName == filter.getFilter().name) return
-        filter.updateFilterName(userName)
-        onLoadUpdateFilter()
+    fun updateCharacterName(userName: String) {
+        if (userName.equals(filter.getFilter().name)) return
+        filter.setFilterName(userName)
+        this.page = 1
+        updateWithFilter()
     }
 
-    fun setFilterStatus(characterFilter: CharacterFilter) {
-        filter.updateFilterStatus(characterFilter)
-        onLoadUpdateFilter()
+    fun updateFilterSpecies(characterFilter: CharacterFilter) {
+        filter.setFilterSpecies(characterFilter)
+        updateWithFilter();
     }
 
-    fun setFilterSpecies(characterFilter: CharacterFilter) {
-        filter.updateFilterSpecies(characterFilter)
-        onLoadUpdateFilter()
+    fun updateFilterStatus(characterFilter: CharacterFilter) {
+        filter.setFilterStatus(characterFilter)
+        updateWithFilter();
+    }
+
+    private fun updateWithFilter(){
+        if (_characterState.value is CharacterState.Success || _characterState.value is CharacterState.Progress) {
+            onLoadUpdateFilter()
+        } else {
+            _characterCache.clearCache()
+            initCharacterSubject()
+        }
     }
 
     fun onLoadMore() {
-        getCharacters(filter.getFilter())
+        characterSubject.onNext(filter.getFilter())
     }
 
     fun onRetry() {
+        initCharacterSubject()
         onLoadUpdateFilter()
+    }
+
+    fun onRetryPaging() {
+        initCharacterSubject()
     }
 
     private fun onLoadUpdateFilter() {
         _characterCache.clearCache()
         page = 1
-        getCharacters(characterFilter = filter.getFilter())
+        characterSubject.onNext(filter.getFilter())
     }
 
-    private fun getCharacters(characterFilter: CharacterFilter) {
-        disposePagin?.let { disposePagin?.dispose() }
-        disposePagin =
-            rickAndMortyRepository.getCharacters(
-                page = page,
-                characterFilter = characterFilter
-            )
-                .map { characterEntityMapper.mapToEntity(it) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { if (page == 1) _characterState.value = CharacterState.Progress }
-                .subscribe(
-                    { handleSuccess(it) },
-                    { handleError(it as Exception) }
+    private fun initCharacterSubject() {
+        disposePagin?.dispose()
+        disposePagin = characterSubject
+            .startWith(filter.getFilter())
+            .debounce(DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+            .switchMap {
+                rickAndMortyRepository.getCharacters(
+                    page = page,
+                    characterFilter = filter.getFilter()
                 )
+                    .toObservable()
+                    .subscribeOn(Schedulers.io())
+            }
+            .map { characterEntityMapper.mapToEntity(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { if (page == 1) _characterState.value = CharacterState.Progress }
+            .subscribe(
+                { handleSuccess(it) },
+                { handleError(it as Exception) }
+            )
     }
 
     private fun handleSuccess(list: List<CharacterEntity>) {
@@ -119,4 +142,9 @@ class CharacterViewModel(
         super.onCleared()
         disposePagin?.dispose()
     }
+
+    companion object {
+        const val DEBOUNCE_TIME: Long = 400
+    }
+
 }
